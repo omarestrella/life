@@ -69,10 +69,7 @@ class Grid(object):
         Counts the boundaries as dead cells, otherwise we will wrap around
         or get an IndexError
         """
-        try:
-            return self.grid[row][col] if 0 <= row < self.rows and 0 <= col < self.cols else 0
-        except IndexError:
-            return 0
+        return self.grid[row][col] if 0 <= row < self.rows and 0 <= col < self.cols else 0
 
     def pretty_print(self):
         print '\n'
