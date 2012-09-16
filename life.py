@@ -85,8 +85,9 @@ if __name__ == '__main__':
 
     rows = int(raw_input('How many rows? '))
     cols = int(raw_input('How many columns? '))
+    steps = int(raw_input('How many steps? '))
 
     grid = Grid(rows, cols)
     grid.load_file(file_name)
     grid.pretty_print()
-    grid.step(1)
+    grid.step(steps)
