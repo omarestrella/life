@@ -20,8 +20,6 @@ class Grid(object):
         """Opens a file and populates the grid"""
 
         with open(file_, 'r') as grid_file:
-            grid_file = file(file_)
-
             # Read the line, convert the string to integers, and add the line
             # to the grid array. Note that any extra rows/cols are not included
             # if you provide a number less than the actual size of the grid.
