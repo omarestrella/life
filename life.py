@@ -20,7 +20,7 @@ class Grid(object):
         """Opens a file and populates the grid"""
 
         with open(file_, 'r') as grid_file:
-            # Read the line, convert the string to integers, and add the line
+            # Read the line, convert the string to an integer, and add the line
             # to the grid array. Note that any extra rows/cols are not included
             # if you provide a number less than the actual size of the grid.
             for i in range(self.rows):
@@ -30,20 +30,20 @@ class Grid(object):
     def step(self, times=1):
         """
         Run through a set amount of steps
-
-        Use a new grid to hold the changed rows. We do this so the new state
-        of the row does not affect the processing of the next row.
         """
         for time in range(times):
+            # Use a new grid to hold the changed rows. We do this so the new state
+            # of the row does not affect the processing of the next row.
             new_grid = deepcopy(self.grid)
 
             for row, values in enumerate(self.grid):
                 for col, cell in enumerate(values):
                     live = self.check_neighbors(row, col)
 
+                    # Life logic contained in the following four rules
+                    # else needed in shortand if-else statement :(
                     if cell == 1:
                         new_grid[row][col] = 0 if live < 2 or live > 3 else 1
-
                     else:
                         new_grid[row][col] = 1 if live == 3 else 0
 
@@ -54,7 +54,7 @@ class Grid(object):
         """Returns the number of live neighbors for a given cell"""
         neighbors = [
             (row - 1, col - 1,), (row - 1, col,), (row - 1, col + 1,),
-            (row, col - 1,), (row, col + 1,),
+            (row, col - 1,), (row, col + 1,),  # Do not include the cell itself!
             (row + 1, col - 1,), (row + 1, col,), (row + 1, col + 1,),
         ]
 
@@ -70,6 +70,7 @@ class Grid(object):
         return self.grid[row][col] if 0 <= row < self.rows and 0 <= col < self.cols else 0
 
     def pretty_print(self):
+        """Print out the grid of cells (lazily...)"""
         print '\n'
         for row in self.grid:
             print ' '.join([str(val) for val in row])
