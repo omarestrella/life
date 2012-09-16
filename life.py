@@ -1,6 +1,6 @@
 import sys
-import pprint
 from copy import deepcopy
+
 
 class Grid(object):
     """
@@ -29,7 +29,6 @@ class Grid(object):
                 line = grid_file.readline().split(' ')
                 self.grid.append([int(num) for num in line][:self.cols])
 
-
     def step(self, times=1):
         """
         Run through a set amount of steps
@@ -37,33 +36,32 @@ class Grid(object):
         Use a new grid to hold the changed rows. We do this so the new state
         of the row does not affect the processing of the next row.
         """
-        new_grid = deepcopy(self.grid)
         for time in range(times):
+            new_grid = deepcopy(self.grid)
+
             for row, values in enumerate(self.grid):
                 for col, cell in enumerate(values):
                     live = self.check_neighbors(row, col)
+
                     if cell == 1:
-                        if live < 2 or live > 3:
-                            new_grid[row][col] = 0
-                        if live == 2 or live == 3:
-                            new_grid[row][col] = 1 # stay the same
+                        new_grid[row][col] = 0 if live < 2 or live > 3 else 1
+
                     else:
-                        if live == 3:
-                            new_grid[row][col] = 1
+                        new_grid[row][col] = 1 if live == 3 else 0
+
             self.grid = new_grid
             self.pretty_print()
-
 
     def check_neighbors(self, row, col):
         """Returns the number of live neighbors for a given cell"""
         neighbors = [
-            (row-1, col-1,), (row-1, col,), (row-1, col+1,),
-            (row, col-1,), (row, col+1,),
-            (row+1, col-1,), (row+1, col,), (row+1, col+1,),
+            (row - 1, col - 1,), (row - 1, col,), (row - 1, col + 1,),
+            (row, col - 1,), (row, col + 1,),
+            (row + 1, col - 1,), (row + 1, col,), (row + 1, col + 1,),
         ]
-        # Sum up
-        return sum([self.check_cell(*neighbor) for neighbor in neighbors])
 
+        # Sum up the live cells using the value of the neighbors
+        return sum([self.check_cell(*neighbor) for neighbor in neighbors])
 
     def check_cell(self, row, col):
         """
@@ -76,23 +74,19 @@ class Grid(object):
         except IndexError:
             return 0
 
-
     def pretty_print(self):
         print '\n'
         for row in self.grid:
             print ' '.join([str(val) for val in row])
 
 
-    def __str__(self):
-        return '\n%s' % pprint.PrettyPrinter().pformat(self.grid)
-
-
 if __name__ == '__main__':
     file_name = sys.argv[1]
+
     rows = int(raw_input('How many rows? '))
     cols = int(raw_input('How many columns? '))
 
     grid = Grid(rows, cols)
     grid.load_file(file_name)
     grid.pretty_print()
-    grid.step()
+    grid.step(1)
